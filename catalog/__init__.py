@@ -1,0 +1,2 @@
+# username - admin
+# pwd - admin
