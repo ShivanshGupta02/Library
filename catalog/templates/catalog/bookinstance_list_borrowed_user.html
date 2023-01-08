@@ -1,0 +1,20 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+    <h1> My Borrowed Books </h1>
+
+    {% if bookinstance_list %}
+        <ul>
+            {% for bookinstance in bookinstance_list %}
+                <li class="{% if bookinstance.is_overdue %} text-danger {% endif %}">
+                    <a href = "{% url 'book-detail' bookinstance.book.pk %}"> 
+                        {{bookinstance.book.title}}
+                    </a> ({{bookinstance.due_back}})
+
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p> No books are borrowed </p>
+    {% endif %}
+{% endblock  %}

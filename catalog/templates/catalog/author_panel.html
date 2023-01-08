@@ -1,0 +1,22 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1> Author Panel </h1>
+  {% if author_list %}
+  <ul>
+    {% for author in author_list %}
+        <li>
+            <a href = "{{author.get_absolute_url }}"><b> {{author}} </b></a>
+            <div class="ml-20 mt-20">
+                <div> (<a href="{% url 'author-delete' author.id %}" > Delete the author</a>)</div>
+                <div> (<a href="{% url 'author-update' author.id %}" > Update the author</a>)</div>
+            </div>
+        </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p> There are no authors </p>
+  {% endif %}
+
+
+{% endblock %}

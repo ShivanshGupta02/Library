@@ -1,6 +1,15 @@
 {% extends "base_generic.html" %}
 
+
+
 {% block content %}
+  <form class="mt-5" method='GET' action="{% url 'author-search' %}">
+    {% csrf_token %}
+    <input type="text" id="query" name="query" placeholder="Search your fav author">
+    <input type="submit" value="Search">
+  </form>
+  <br>
+
   <h1> Author List </h1>
   {% if author_list %}
   <ul>

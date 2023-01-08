@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1> Your search result for : <b> {{query}} </b> </b> </h1>
+  {% if author_list %}
+  <ul>
+    {% for author in author_list %}
+        <li>
+            <a href = "{{author.get_absolute_url }}">{{author}} </a>
+        </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p> There are no such authors </p>
+  {% endif %}
+
+
+{% endblock %}
