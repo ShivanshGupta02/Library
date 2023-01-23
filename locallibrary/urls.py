@@ -20,6 +20,7 @@ from django.urls import path,include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('catalog/',include('catalog.urls')),
+    path('subscribe/',include('membership.urls')),
 ]
 
 from django.views.generic import RedirectView

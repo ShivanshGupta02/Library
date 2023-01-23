@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import Book,BookInstance,Author,Genre
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from .mixins import CheckStaffGroupMixin
 # Create your views here
 import datetime
 
@@ -67,9 +68,8 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 # Creating view for listing all borrowed books for staff members
 
-class BorrowedBooksByUserListView(PermissionRequiredMixin,generic.ListView):
+class BorrowedBooksByUserListView(CheckStaffGroupMixin,generic.ListView):
     model = BookInstance
-    permission_required = 'catalog.can_mark_returned'
     template_name = 'catalog/bookinstance_list_borrowed_by_all_user.html'
     paginate_by = 10
 
@@ -77,64 +77,26 @@ class BorrowedBooksByUserListView(PermissionRequiredMixin,generic.ListView):
     def get_queryset(self):
         return BookInstance.objects.filter(status__exact='o')
     
-    
-
-
-@login_required
-@permission_required('catalog.can_mark_returned',raise_exception=True)
-def renew_book_librarian(request,pk):
-    book_instance = get_object_or_404(BookInstance,pk=pk)
-    
-    # if 'POST' request is made then process the form data 
-    if request.method=='POST':
-        # create a form instance and populate it with the data from the request(binding)
-        form = RenewBookForm(request.POST)
-        # if form is valid
-        if form.is_valid():
-            # process the data in form.cleaned_data as per your requirement
-            book_instance.due_back = form.cleaned_data['renewal_date']
-            book_instance.save()
-            print("form is valid")
-        #  redirect to a new url
-        return HttpResponseRedirect(reverse('all-borrowed'))
-        
-        
-        
-    # else 'GET' request is made then prepare the default form
-    else:
-        proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=3)
-        form = RenewBookForm(initial={'renewal_date':proposed_renewal_date})
-
-    context = {
-        'form':form,
-        'book_instance':book_instance,
-    }
-    return render(request,'catalog/book_renew_librarian.html',context)
-
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from catalog.models import Author 
 
-class AuthorCreate(PermissionRequiredMixin, CreateView):
+class AuthorCreate(CheckStaffGroupMixin, CreateView):
     model = Author
     fields = ['first_name','last_name','date_of_birth','date_of_death']
     initial = {'date_of_death':'11/06/2100'}
-    permission_required = 'catalog.can_mark_returned'
-    
-class AuthorUpdate(PermissionRequiredMixin,UpdateView):
+      
+class AuthorUpdate(CheckStaffGroupMixin,UpdateView):
     model = Author 
     fields='__all__'
-    permission_required= 'catalog.can_mark_returned'
-
-class AuthorDelete(PermissionRequiredMixin,DeleteView):
+   
+class AuthorDelete(CheckStaffGroupMixin,DeleteView):
     model = Author 
     success_url = reverse_lazy('authors')
-    permission_required = 'catalog.can_mark_returned'
-
-class AuthorPanelListView(PermissionRequiredMixin,generic.ListView):
+    
+class AuthorPanelListView(CheckStaffGroupMixin,generic.ListView):
     model = Author
-    permission_required = 'catalog.can_mark_returned'
     template_name = 'catalog/author_panel.html'
     paginate_by = 10
   
@@ -142,26 +104,22 @@ class AuthorPanelListView(PermissionRequiredMixin,generic.ListView):
 
 from catalog.models import Book
 
-class BookCreate(PermissionRequiredMixin, CreateView):
+class BookCreate(CheckStaffGroupMixin , CreateView):
     model = Book 
     fields = '__all__'
-    permission_required = 'catalog.can_mark_returned'
 
-class BookUpdate(PermissionRequiredMixin, UpdateView):
+class BookUpdate(CheckStaffGroupMixin, UpdateView):
     model = Book 
     fields='__all__'
-    permission_required = 'catalog.can_mark_returned'
+   
     
-    
-class BookDelete(PermissionRequiredMixin ,DeleteView):
+class BookDelete(CheckStaffGroupMixin , DeleteView):
     model = Book
     success_url = reverse_lazy('books')
-    permission_required = 'catalog.can_mark_returned'
-    
 
-class BookPanelListView(PermissionRequiredMixin,generic.ListView):
+
+class BookPanelListView(CheckStaffGroupMixin, generic.ListView):
     model = Book 
-    permission_required = 'catalog.can_mark_returned'
     template_name = 'catalog/book_panel.html'
     paginate_by = 10
 
@@ -176,4 +134,5 @@ class AuthorSearchView(LoginRequiredMixin,generic.ListView):
         context["author_list"] =Author.objects.filter(Q(first_name__icontains=query) | Q(last_name__icontains=query))
         context["query"] = query
         return context
-
+    
+    

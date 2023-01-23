@@ -1,0 +1,33 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Library subscription detail</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+  </head>
+  <body>
+    {% for plan in plans %}
+  
+    <section>
+      <div class="product">
+        <img src="https://i.imgur.com/EHyR2nP.png" alt="The cover of Stubborn Attachments" />
+        <div class="description">
+          <h3>Become <b>{{plan.membership_type}}</b></h3>
+          <h5><b>{{plan.get_display_price}} INR</b></h5>
+        </div>
+      </div>
+      <form action="{% url 'create-checkout-session' plan.id %}" method="POST">
+          {% csrf_token %}
+        <button type="submit" id="checkout-button">Checkout</button>
+      </form>
+      {% endfor %}
+    </section>
+  </body>
+</html>
+{% endblock content %}
+
+
