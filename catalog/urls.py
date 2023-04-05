@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
+import uuid
 
+# Here pk stands for primary key
 urlpatterns = [
     path('',views.index,name='index'),
     path('books/',views.BookListView.as_view(),name='books'),   
@@ -26,11 +28,16 @@ urlpatterns += [
     path('book/create/',views.BookCreate.as_view(),name='book-create'),
     path('book/<int:pk>/update/',views.BookUpdate.as_view(),name='book-update'),
     path('book/<int:pk>/delete/',views.BookDelete.as_view(),name='book-delete'),
+    path('bookInstance/create/',views.BookInstanceCreate.as_view(),name='bookinstance-create'),
     path('book/panel/',views.BookPanelListView.as_view(),name='book-panel'),
+    path('book/issue/',views.availableBooks.as_view(),name='book-issue'),
 ]
 
 urlpatterns+=[
     path('allbooks/',views.BorrowedBooksByUserListView.as_view(),name='all-borrowed')
+]
+urlpatterns+=[
+    path('bookInstance/<uuid:pk>/return/',views.MarkReturned.as_view(),name ='mark-bookinstance-returned')
 ]
 
 

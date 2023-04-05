@@ -26,10 +26,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-we5b&4ar$g0cka_1*iez#*$9n2@zne1_oa9nh5r)@0-fo51vb!'
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -137,9 +137,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # redirect to home url after login
 LOGIN_REDIRECT_URL = '/'
 
-
+YOUR_DOMAIN = "http://127.0.0.1:8000"
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 STRIPE_PUBLIC_KEY = ""
-STRIPE_SECRET_KEY = 'sk_test_51MNi4iSBlcH4IZlWVhtEQTBrp8GzKy7zU772qdMp2Uu6QBNrcJU78H9ttYEqpHmweDSUAfgzaxSvpESsBBVxc4Wg00GVSmuyq9'
-STRIPE_WEBHOOK_KEY = "whsec_d58d34c2c47e3ad82b1aa0402a90f207d13b0abb4b3a4502e57c5f5981b4d4d8"
+STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
+STRIPE_WEBHOOK_KEY = env("STRIPE_WEBHOOK_KEY")

@@ -1,23 +1,26 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .models import Book,BookInstance,Author,Genre
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from .mixins import CheckStaffGroupMixin
+from .mixins import CheckStaffGroupMixin 
+from django.views import View
+from django.contrib.auth.models import User
 # Create your views here
 import datetime
 
 
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,HttpResponse
 from django.urls import reverse 
 from django.contrib.auth.decorators import login_required,permission_required
-from catalog.forms import RenewBookForm 
+# from catalog.forms import RenewBookForm 
 
 def index(request):
     num_books = Book.objects.all().count()
     num_instances = BookInstance.objects.all().count()
     
-    num_instances_available = BookInstance.objects.filter(status__exact = 'a').count()
+    # num_instances_available = BookInstance.objects.filter(status__exact = 'a').count()
+    num_instances_available = BookInstance.objects.filter(status=BookInstance.AVAILABLE).count()
     
     num_authors = Author.objects.count()
     
@@ -75,7 +78,8 @@ class BorrowedBooksByUserListView(CheckStaffGroupMixin,generic.ListView):
 
     
     def get_queryset(self):
-        return BookInstance.objects.filter(status__exact='o')
+        # return BookInstance.objects.filter(status__exact='o')
+        return BookInstance.objects.filter(status=BookInstance.ON_LOAN)
     
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -116,7 +120,10 @@ class BookUpdate(CheckStaffGroupMixin, UpdateView):
 class BookDelete(CheckStaffGroupMixin , DeleteView):
     model = Book
     success_url = reverse_lazy('books')
-
+    
+class BookInstanceCreate(CheckStaffGroupMixin, CreateView):
+    model = BookInstance
+    fields = ['book','imprint','status']
 
 class BookPanelListView(CheckStaffGroupMixin, generic.ListView):
     model = Book 
@@ -135,4 +142,52 @@ class AuthorSearchView(LoginRequiredMixin,generic.ListView):
         context["query"] = query
         return context
     
-    
+from catalog.models import BookInstance
+class MarkReturned(CheckStaffGroupMixin,View):
+        def get(self,request,*args,**kwargs):
+            bookInstance_id = self.kwargs["pk"]
+            obj = BookInstance.objects.get(id=bookInstance_id)
+            obj.due_back = None 
+            obj.status = 'a'
+            obj.borrower = None 
+            obj.save(update_fields=['due_back','status','borrower'])
+            return redirect(reverse('all-borrowed'))
+
+
+from .forms import IssueBookForm
+class availableBooks(CheckStaffGroupMixin,View):
+        template_name = 'catalog/book_issue.html'
+        form_class = IssueBookForm
+        def get(self,request,*args,**kwargs):
+            context = {}
+            form = self.form_class()
+            context['form'] = form
+            context["available_book_list"] = BookInstance.objects.filter(Q(status=BookInstance.AVAILABLE)) 
+            return render(request,self.template_name,context)
+        
+        def post(self,request,*args,**kwargs):
+            form = self.form_class(request.POST)
+            if form.is_valid():
+                bookInstance_id = form.cleaned_data['bookInstance_id']
+                due_back_date = form.cleaned_data['due_back_date']
+                username = form.cleaned_data['username']
+                # print(type(bookInstance_id))
+                # print(type(username))
+                # print(type(due_back_date))  
+                # print(bookInstance_id)
+                # print(username)
+                # print(due_back_date)
+                user_object = User.objects.get(username=username)
+                           
+                
+                obj = BookInstance.objects.get(pk=bookInstance_id)
+                obj.due_back = due_back_date
+                obj.borrower = user_object
+                # SETTING STATUS ON LOAN
+                obj.status =  BookInstance.ON_LOAN
+                obj.save(update_fields=['due_back','borrower','status'])
+                return HttpResponse("Book Successfully Issued")
+            return render(request,self.template_name,{'form':form})
+
+         
+        

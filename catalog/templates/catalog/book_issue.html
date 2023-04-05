@@ -1,0 +1,18 @@
+{% extends 'base_generic.html' %}
+{% block content %}
+    <h1> Available Books that can be borrowed </h1>
+    <ul>
+        <form action="" method="post">
+            {% csrf_token %}
+            <table>
+                {{form.as_table}}
+            </table>
+            <input type="submit" value="Submit"/>
+        </form>
+        {% for bookinstance in available_book_list %}
+            <li>
+                <a href="{%url 'book-detail' bookinstance.book.pk%}" >{{bookinstance.book.title}}</a> : {{bookinstance.imprint}}, book instance id is : {{bookinstance.pk}}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock content %}

@@ -26,7 +26,6 @@ class SubscriptionPageView(TemplateView):
 # Checkout session provides a URL that redirects customers to a Stripe-hosted payment page
 class CreateCheckoutSessionView(View):
     def post(self,request,*args,**kwargs):
-        YOUR_DOMAIN = "http://127.0.0.1:8000"
         plan_id = self.kwargs["pk"]
         user_id = request.user.id
         plan = Membership.objects.get(id=plan_id)
@@ -53,8 +52,8 @@ class CreateCheckoutSessionView(View):
                     "user_id": user_id
                 },
                 mode='payment',
-                success_url=YOUR_DOMAIN + '/subscribe/success/',
-                cancel_url=YOUR_DOMAIN + '/subscribe/cancel/',
+                success_url=settings.YOUR_DOMAIN + '/subscribe/success/',
+                cancel_url=settings.YOUR_DOMAIN + '/subscribe/cancel/',
             )
         except Exception as e:
             print(e)

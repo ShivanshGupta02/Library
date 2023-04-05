@@ -37,6 +37,7 @@ class Book(models.Model):
     def __str__(self):
         return self.title
     
+    # -----> By default action for form submission <-----
     def get_absolute_url(self):
         #  returns the url to access detail record for this book
         return reverse('book-detail',args=[str(self.id)])
@@ -47,17 +48,21 @@ import uuid # required for unique book instances
 
 class BookInstance(models.Model):
     # Model represeting the specific copy of a book that can be borrowed from the library
-    id = models.UUIDField(primary_key=True,default=uuid.uuid4,help_text='Unique id for this particular book across the whole library')
-    book = models.ForeignKey('Book', on_delete=models.RESTRICT,null=True)
+    id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False,help_text='Unique id for this particular book across the whole library')
+    book = models.ForeignKey(Book, on_delete=models.RESTRICT,null=True)
     imprint = models.CharField(max_length = 200)
     due_back = models.DateField(null=True,blank=True)   
     borrower = models.ForeignKey(User, on_delete=models.SET_NULL,null=True, blank= True)
     
+    MAINTAINANCE = 'm'
+    ON_LOAN = 'o'
+    RESERVED = 'r'
+    AVAILABLE = 'a'
     LOAN_STATUS = (
-        ('m','Maintenance'),
-        ('o','On loan'),
-        ('r','reserved'),
-        ('a','available')
+        (MAINTAINANCE,'Maintenance'),
+        (ON_LOAN,'On loan'),
+        (RESERVED,'reserved'),
+        (AVAILABLE,'available')
     )
     
     status = models.CharField(
@@ -70,15 +75,22 @@ class BookInstance(models.Model):
     
     class Meta:
         ordering = ['due_back']
-        permissions = (("can_mark_returned","Set book as returned"),)
+        # permissions = (("can_mark_returned","Set book as returned"),)
 
     def __str__(self):
         # string for representing the model object
         return f'{self.id}({self.book.title})'
+    
+    # -----> By default action for form submission <-----
+    def get_absolute_url(self):
+        return reverse("book-detail", args=[str(self.book.id)])
 
     @property
     def is_overdue(self):
         return bool(self.due_back and date.today() > self.due_back)
+    def fine(self):
+        return 2*(date.today()-self.due_back).days
+            
     
 
 class Author(models.Model):
