@@ -136,8 +136,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # redirect to home url after login
 LOGIN_REDIRECT_URL = '/'
+YOUR_DOMAIN = env("YOUR_DOMAIN")
 
-YOUR_DOMAIN = "http://127.0.0.1:8000"
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 STRIPE_PUBLIC_KEY = ""
