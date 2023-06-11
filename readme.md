@@ -1,7 +1,11 @@
 
 Model Architecture Planning
+
+
     pk - primary key
     Inbuilt user model provided by django
+
+
     User :: 
         id : integer (pk) -- Automatically added by django
         username : string (unique)
@@ -16,6 +20,7 @@ Model Architecture Planning
         is_superuser : Boolean
         last_login : A datetime of the user’s last login
         date_joined : A datetime designating when the account was created
+
 
     Author :
         id : integer (pk) -- Automatically added by django
