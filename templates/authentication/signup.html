@@ -1,0 +1,48 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    {% for message in messages  %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{message}}</strong> 
+    </div>
+    {% endfor %}
+    <div class='text-center'> <h2>Sign Up</h2> </div>
+    <div class="container-fluid">
+    <form method="POST" action="{% url 'signup' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+        <label class="form-label" for=""> Username </label>
+        <input class="form-control" type="text" id="username" name="username" placeholder="create a username" Required>
+        </div>
+
+        <div class="mb-3">
+        <label class="form-label" for=""> First name </label>
+        <input class="form-control" type="text" id="fname" name="fname" placeholder="Enter your first name" Required>
+        </div>
+
+        <div class="mb-3">
+        <label class="form-label" for=""> Last name</label>
+        <input class="form-control" type="text" id="lname" name="lname" placeholder="Enter your last name" Required>
+        </div>
+        
+        <div class="mb-3">
+        <label class="form-label" for=""> Email </label>
+        <input class="form-control" type="email" id="email" name="email" placeholder="Enter your email" Required>
+        </div>
+
+        <div class="mb-3">
+        <label class="form-label" for=""> Password </label>
+        <input class="form-control" type="password" id="pass1" name="pass1" placeholder="create a password" Required>
+        </div>
+
+        <div class="mb-3">
+        <label class="form-label" for=""> Password </label>
+        <input class="form-control" type="password" id="pass2" name="pass2" placeholder="confirm your password" Required>
+        </div>
+
+        <button class="btn btn-primary" type="submit"> Signup </button>
+
+    </form>
+</div>
+
+{% endblock content %}

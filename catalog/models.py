@@ -89,7 +89,10 @@ class BookInstance(models.Model):
     def is_overdue(self):
         return bool(self.due_back and date.today() > self.due_back)
     def fine(self):
-        return 2*(date.today()-self.due_back).days
+        finee = 0
+        if (date.today() > self.due_back) :
+            finee = 1*(date.today()-self.due_back).days
+        return finee
             
     
 

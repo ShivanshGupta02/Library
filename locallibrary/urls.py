@@ -20,7 +20,7 @@ from django.urls import path,include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('catalog/',include('catalog.urls')),
-    path('subscribe/',include('membership.urls')),
+    path('',include('catalog.urls')),
 ]
 
 from django.views.generic import RedirectView
@@ -40,8 +40,5 @@ urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 # adding django site authentication urls 
 # for login, logout and password management
 
-urlpatterns += [
-    path('accounts/',include('django.contrib.auth.urls'))
-]
 
 

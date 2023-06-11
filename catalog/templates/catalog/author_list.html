@@ -14,13 +14,13 @@
   {% if author_list %}
   <ul>
     {% for author in author_list %}
-        <li>
+        <li class="fs-5 text">
             <a href = "{{author.get_absolute_url }}">{{author}} </a>
         </li>
     {% endfor %}
   </ul>
   {% else %}
-    <p> There are no authors </p>
+    <p> There is no such author. </p>
   {% endif %}
 
 

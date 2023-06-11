@@ -3,20 +3,32 @@
 {% block content %}
     <h1 >Book Panel</h1>
     {% if book_list %}
-    <ul>
-    {% for book in book_list %}
-        <li>
-        <a href="{{ book.get_absolute_url }}"><b>{{ book.title }}</b></a> (by <b>{{book.author}}</b>)
-        <div class="ml-20 mt-20">
-            <div> (<a href="{% url 'book-delete' book.id %}" > Delete the book</a>)</div>
-            <div> (<a href="{% url 'book-update' book.id %}" > Update the book</a>)</div>
-        </div>
-        </li>
-        
-    {% endfor %}
-    </ul>
+    <div class="container fs-5">
+        <table class="table table-bordered text-center">
+          <thead>
+            <tr>
+              <th scope="col"> Book </th>
+              <th scope="col"> Deletion</th>
+              <th scope="col"> Updation</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for book in book_list %}
+              <tr>
+            
+               <td> <a href = "{{book.get_absolute_url }}"><b> {{book}} </b></a></td>
+               
+               <td > <div class="btn btn-warning btn-outline-info"> <a href="{% url 'book-delete' book.id %}" > Delete </a> </div></td>
+               <td > <div class="btn btn-warning btn-outline-info"><a href="{% url 'book-update' book.id %}" > Update </a> </div> </td>
+              
+              
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     {% else %}
-    <p>There are no books in the library.</p>
+    <p>There is no book in the library.</p>
     {% endif %}
 
 {% endblock content %}

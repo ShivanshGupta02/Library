@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # our new application
     'catalog.apps.CatalogConfig',
-    'membership.apps.MembershipConfig',
+
     
 ]
 
@@ -65,7 +65,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # To make sure template directory is visible to the template loader to add it in the template search path
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': [os.path.join(BASE_DIR,'templates',)],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,6 +127,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+# STATICFILES_DIRS = [os.path.join(BASE_DIR,'catalog/static',),]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -139,7 +140,3 @@ LOGIN_REDIRECT_URL = '/'
 YOUR_DOMAIN = env("YOUR_DOMAIN")
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-STRIPE_PUBLIC_KEY = ""
-STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
-STRIPE_WEBHOOK_KEY = env("STRIPE_WEBHOOK_KEY")

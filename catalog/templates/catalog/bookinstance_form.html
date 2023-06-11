@@ -2,9 +2,12 @@
 
 {% block content %}
     <h1> Create a new book instance </h1>
-    <form action="" method="post">
+    <form class="fs-5" action="" method="post">
         {% csrf_token %}
-        {{form.as_ul}}
+        <table>
+        {{form.as_table}}
+        </table>
         <input type="submit" value="Submit"/>
     </form>
+    
 {% endblock content %}

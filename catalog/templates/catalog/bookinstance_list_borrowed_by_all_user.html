@@ -4,22 +4,37 @@
 
     <h1> All borrowed books </h1>
     {% if bookinstance_list %}
-        <ul>
-            {% for bookinstance in bookinstance_list %}
-            <li class="{% if bookinstance.is_overdue %} text-danger {%endif%} ">
-                {% comment %} Here bookinstance.book.pk is primary key for particular entry in database {% endcomment %}
-                <a href = "{% url 'book-detail' bookinstance.book.pk %}"> 
-                    {{bookinstance.book.title}} 
-                </a> borrowed by <b>{{bookinstance.borrower.first_name}} {{bookinstance.borrower.last_name}} </b> and Due date is: {{bookinstance.due_back}}
-                {% if bookinstance.is_overdue %}(Overdue fine is : {{bookinstance.fine}} INR){% endif %}
-                {% if perms.catalog.can_mark_returned %}- <a href="{% url 'renew-book-librarian' bookinstance.id %}">Renew</a>  {% endif %}
-                <form method='GET' action="{% url 'mark-bookinstance-returned' pk=bookinstance.id %}">
-                    {% csrf_token %}
-                    <input class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this issued book details and fine is collected?')" type = "submit" value="Mark returned">
-                </form>
-            </li>
-            {% endfor %}
-        </ul>
+        <div class="container fs-5">
+            <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col">Book</th>
+                    <th scope="col">Borrower Name</th>
+                    <th scope="col">Due Date</th>
+                    <th scope="col">Overdue Fine</th>
+                    <th scope="col">Mark Returned</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for bookinstance in bookinstance_list %}
+                    <tr>
+                        <td><a href="{% url 'book-detail' bookinstance.book.pk %}">{{bookinstance.book.title}} </a> </td>
+                        <td>{{bookinstance.borrower.first_name }} {{bookinstance.borrower.last_name}}</td>
+                        <td>{{bookinstance.due_back}}</td>
+                        <td class="{% if bookinstance.is_overdue %} text-danger {% endif %}" >{{bookinstance.fine}} INR</td>
+                        <td>
+                            <form method="GET" action="{% url 'mark-bookinstance-returned'  pk=bookinstance.id %}">
+                            {% csrf_token %}
+                            <input class="btn btn-success" type="submit" value="Mark Returned" onclick="return confirm('Are you sure to delete the issued book details and fine is collected?')" > 
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                
+              </table>
+        </div>  
+       
     {% endif %}
 
 {% endblock content %}

@@ -3,17 +3,30 @@
 {% block content %}
   <h1> Author Panel </h1>
   {% if author_list %}
-  <ul>
-    {% for author in author_list %}
-        <li>
-            <a href = "{{author.get_absolute_url }}"><b> {{author}} </b></a>
-            <div class="ml-20 mt-20">
-                <div> (<a href="{% url 'author-delete' author.id %}" > Delete the author</a>)</div>
-                <div> (<a href="{% url 'author-update' author.id %}" > Update the author</a>)</div>
-            </div>
-        </li>
-    {% endfor %}
-  </ul>
+  <div class="container fs-5">
+    <table class="table table-bordered text-center">
+      <thead>
+        <tr>
+          <th scope="col"> Author </th>
+          <th scope="col"> Deletion</th>
+          <th scope="col"> Updation</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for author in author_list %}
+          <tr>
+        
+           <td> <a href = "{{author.get_absolute_url }}"><b> {{author}} </b></a></td>
+           
+           <td > <div class="btn btn-warning btn-outline-info"> <a href="{% url 'author-delete' author.id %}" > Delete </a> </div></td>
+           <td > <div class="btn btn-warning btn-outline-info"><a href="{% url 'author-update' author.id %}" > Update </a> </div> </td>
+          
+          
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
   {% else %}
     <p> There are no authors </p>
   {% endif %}

@@ -22,11 +22,11 @@ from  .models import BookInstance
     #     return data
     
 import uuid
-    
+
 class IssueBookForm(forms.Form):
     username = forms.CharField()
     bookInstance_id = forms.UUIDField()
-    due_back_date = forms.DateField(help_text="Enter a date b/w now and 4 weeks")
+    due_back_date = forms.DateField(help_text="Enter a date b/w now and 4 weeks in YYYY-MM-DD format")
     
     def clean_due_back_date(self):
         data = self.cleaned_data['due_back_date']
@@ -42,9 +42,11 @@ class IssueBookForm(forms.Form):
         
     def clean_username(self):
         data = self.cleaned_data['username']
-        if not User.objects.filter(username=data).exists():
-            raise ValidationError(_("Invalid username : Username doesn't exist"))   
+        user = User.objects.get(username=data)
+        if user is None:
+            raise ValidationError(_("Invalid username : Username doesn't exist"))  
         return data
+
 
     def clean_bookInstance_id(self):
         data = self.cleaned_data['bookInstance_id']

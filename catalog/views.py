@@ -1,10 +1,11 @@
 from django.shortcuts import render,redirect
 from .models import Book,BookInstance,Author,Genre
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from .mixins import CheckStaffGroupMixin 
+from .mixins import CheckStaffGroupMixin, LoginRequiredMixin
 from django.views import View
+from django.contrib import messages
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate,login,logout
 # Create your views here
 import datetime
 
@@ -14,6 +15,50 @@ from django.http import HttpResponseRedirect,HttpResponse
 from django.urls import reverse 
 from django.contrib.auth.decorators import login_required,permission_required
 # from catalog.forms import RenewBookForm 
+
+def signin(request):
+    if request.method=='POST':
+        username = request.POST['username']
+        pass1 = request.POST['pass1']
+        user = authenticate(username = username, password = pass1)
+        if user is not None:
+            login(request,user)
+            fname = user.first_name
+            return redirect('/')
+        else : 
+            messages.error(request,"Bad credentials")
+            return redirect(reverse('signin'))
+    return render(request,'authentication/signin.html')
+
+def signout(request):
+    logout(request)
+    return redirect('/')
+
+def signup(request):
+    if request.method=='POST':
+        username = request.POST['username']
+        fname = request.POST['fname']
+        lname = request.POST['lname']
+        email = request.POST['email']
+        pass1 = request.POST['pass1']
+        pass2 = request.POST['pass2']
+        if pass1!=pass2:
+            messages.error(request,"Entered password didn't match")
+            return redirect(reverse('signin'))
+        if User.objects.filter(username = username).exists():
+            messages.error(request,"Username already exists, please enter unique username")
+            return redirect(reverse('signin'))
+        myuser = User.objects.create_user(username,email,pass1)
+        myuser.first_name = fname
+        myuser.last_name = lname
+
+        myuser.save()
+
+        messages.success(request, "Your account has been created successfully")
+        return redirect(reverse('signin'))
+
+    return render(request,'authentication/signup.html')
+
 
 def index(request):
     num_books = Book.objects.all().count()
@@ -30,6 +75,7 @@ def index(request):
     request.session['num_visits'] = num_visits+1 
     
     context = {
+       
         'num_books': num_books,
         'num_instances': num_instances,
         'num_instances_available': num_instances_available,

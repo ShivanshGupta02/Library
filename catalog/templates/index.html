@@ -1,16 +1,19 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Library Home</h1>
-  <p><em>Welcome</em>!</p>
-  <h2>Dynamic content</h2>
-  <p>The library has the following record counts:</p>
+  <div class="container-fluid btn btn-primary border-danger border-5 rounded-pill">
+    <h1>Library Management System</h1>
+  </div>
+  <br>
+  <br>
+  <p> {{isPro}}</p>
+  <p class="fs-4 text">The library has the following record counts:</p>
   <ul>
-    <li><strong>Books:</strong> {{ num_books }}</li>
-    <li><strong>Copies:</strong> {{ num_instances }}</li>
-    <li><strong>Copies available:</strong> {{ num_instances_available }}</li>
-    <li><strong>Authors:</strong> {{ num_authors }}</li>
+    <li class="fs-5 text"><strong>Books:</strong> {{ num_books }}</li>
+    <li class="fs-5 text"><strong>Copies:</strong> {{ num_instances }}</li>
+    <li class="fs-5 text"><strong>Copies available:</strong> {{ num_instances_available }}</li>
+    <li class="fs-5 text"><strong>Authors:</strong> {{ num_authors }}</li>
   </ul>
-  <p> You have visited this page {{num_visits}} time{{num_visits|pluralize}}.
+  <p class="fs-6 text"> You have visited this page {{num_visits}} time{{num_visits|pluralize}}.
   </p>
 {% endblock %}

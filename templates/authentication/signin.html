@@ -1,0 +1,45 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    {% for message in messages  %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>{{message}}</strong> 
+        </div>
+    {% endfor %}
+
+ {% comment %} {% if form.errors %}
+    <p> Your username and password didn't match. Please try again. </p>
+ {% endif %}
+    {% if user.is_authenticated %} <p> <b>You are already logged in!!</b></p>
+    {% elif next %}
+        {% if user.is_authenticated %}
+            <p> Your account didn't have access to this page. To proceed, 
+                login with an account that has access </p>
+        {% else %} <p> <b>Please login to access the page</b> </p>
+        {% endif %} {% endcomment %}
+    {% if user.is_authenticated %} <p> <b> You are already logged in. </b> </p>
+    {% else %}
+    <div class="text-center"> <h2> Sign In</h2></div>
+    <div class="container-fluid">
+        <form method='POST' action="{% url 'signin' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+            <label class="form-label" for=""> Username </label>
+            <input class="form-control" type="text" id="username" name="username" placeholder="enter the username" Required>
+            </div>
+
+            <div class="mb-3">
+            <label class="form-label" for=""> Password </label>
+            <input class="form-control" type="password" id="pass1" name="pass1" placeholder="enter the password" Required>
+            </div>
+    
+            <input class="btn btn-primary" type = "submit" value="Signin">
+            <input type = "hidden" name="next" value="{{next}}" >
+        </form>
+    </div>
+    {% endif %}
+
+    {% comment %} {% endif %} {% endcomment %}
+    
+
+{% endblock content %}
