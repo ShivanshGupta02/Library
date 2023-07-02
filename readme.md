@@ -30,6 +30,7 @@ py -3 -m venv .venv
 Then install the project dependencies with
 
 pip install -r requirements.txt
+
 Now you can run the project with this command
 
 python manage.py runserver
