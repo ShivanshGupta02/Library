@@ -1,21 +1,29 @@
-Running this project
+# Running this project
 To get this project up and running you should start by having Python installed on your computer. It's advised you create a virtual environment to store your projects dependencies separately. You can install virtualenv with
 
 pip install virtualenv
+
 Clone or download this repository and open it in your editor of choice. In a terminal (mac/linux) or windows terminal, run the following command in the base directory of this project
 
 In that folder, use the following command (as appropriate to your computer) to create a virtual environment named .venv based on your current interpreter:
-# Linux
+### Linux
+
 sudo apt-get install python3-venv    # If needed
+
 python3 -m venv .venv
+
 source .venv/bin/activate
 
-# macOS
+### macOS
+
 python3 -m venv .venv
+
 source .venv/bin/activate
 
-# Windows
+### Windows
+
 py -3 -m venv .venv
+
 .venv\scripts\activate
 
 
@@ -27,14 +35,14 @@ Now you can run the project with this command
 python manage.py runserver
 
 -----------------------------------------------
-Model Architecture Planning
+# Model Architecture Planning
 
 
     pk - primary key
-    Inbuilt user model provided by django
 
 
-    User :: 
+    Inbuilt User model provided by django
+    User :
         id : integer (pk) -- Automatically added by django
         username : string (unique)
         first_name : string
